@@ -1,0 +1,30 @@
+.products-page img{
+    height: 350px;
+    box-shadow:1px 1px 10px lightgray;
+    border-radius: 10px;
+    border: 1px solid #f7f7f9;
+}
+.products-page button{
+    position: absolute;
+    right:10%;
+    bottom: 10%;
+}
+.price{
+    font-size: 25px;
+}
+.product-details{
+    background-color: #f7f7f9;
+    border-radius: 10px;
+    position:relative;
+}
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.rating-sec i{
+    color: gold;
+}
+.rating-sec p{
+    display: inline-block;
+}
