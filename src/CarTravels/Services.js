@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import AddService from './admin/AddService'
+import { GET_SERVICES } from '../Services/apiRoutes/apiRoutes'
 
 const Services = () => {
     // const data = [
@@ -35,10 +36,10 @@ const Services = () => {
     //     ];
       const [service,setService]=useState([])
       useEffect(() => {
-        axios.get(`http://localhost:4000/Services`)
+        axios.get(GET_SERVICES())
         .then((res)=>setService(res.data))
         .catch((err)=>console.log(err))
-      })
+      },[])
   return (
     <section className='container p-5 mt-5 services'>
         <h2>What We Offer</h2>

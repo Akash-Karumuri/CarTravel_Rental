@@ -13,10 +13,10 @@ const ViewCars = () => {
 
     // Reading data
      useEffect(()=>{
-      axios.get(`http://localhost:4000/Cars`)
+      axios.get(`http://localhost:5000/api/cars`)
       .then((res)=>setCar(res.data))
       .catch((err)=>console.log(err))
-     }) 
+     },[]) 
 
     //  Deleting a car
      const deleteCar = (id) => {
@@ -44,7 +44,7 @@ const ViewCars = () => {
     // Updating Car
     const updateCar=(e)=>{
         e.preventDefault();
-        axios.put(`http://localhost:4000/Cars/${id}`,{id,name,type,imageUrl,seatingCapacity,features,pricePerDay})
+        axios.put(`http://localhost:5000/api/cars/${id}`,{id,name,type,imageUrl,seatingCapacity,features,pricePerDay})
         .then(() => {
             alert('Car Updated');
             setName('');

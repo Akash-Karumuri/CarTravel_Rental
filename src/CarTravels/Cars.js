@@ -2,14 +2,15 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import AddCar from './admin/AddCar';
 import { NavLink } from 'react-router-dom';
+import { GET_CARS } from '../Services/apiRoutes/apiRoutes';
 
 const Cars = () => {
      const [car,setCar]=useState([])
      useEffect(()=>{
-      axios.get(`http://localhost:4000/Cars`)
+      axios.get(GET_CARS())
       .then((res)=>setCar(res.data))
       .catch((err)=>console.log(err))
-     }) 
+     },[]) 
   return (
     <section className='container cars p-5 mt-5'>
         <h2>Choose from a Wide Range of Vehicles Tailored to Your Needs</h2>
