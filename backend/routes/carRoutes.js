@@ -39,4 +39,20 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+
+// Get single car by ID
+router.get("/:id", async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.id);
+
+    if (!car) {
+      return res.status(404).json({ message: "Car not found" });
+    }
+
+    res.json(car);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 export default router;

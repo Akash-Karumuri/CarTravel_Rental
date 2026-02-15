@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useState } from 'react'
-import { POST_CARS } from '../../Services/apiRoutes/apiRoutes'
+import { POST_CAR } from '../../Services/apiRoutes/apiRoutes'
 
 const AddCar = () => {
    const [name,setName]=useState("")
@@ -11,7 +11,7 @@ const AddCar = () => {
    const [pricePerDay,setPricePerPrice]=useState("")
    const AddNewCar=(e)=>{
     e.preventDefault();
-    axios.post(POST_CARS() ,{name,type,imageUrl,seatingCapacity,features,pricePerDay})
+    axios.post(POST_CAR() ,{name,type,imageUrl,seatingCapacity,features,pricePerDay})
     .then((res) => {
       alert("Car Added Successfully")
       setName("")

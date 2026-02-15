@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import carRoutes from "./routes/carRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import serviceRoutes from "./routes/serviceRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -25,3 +26,4 @@ app.listen(process.env.PORT, () => {
 app.use("/api/cars", carRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/services", serviceRoutes);
+app.use("/api/auth", authRoutes);
