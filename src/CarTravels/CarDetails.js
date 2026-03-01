@@ -1,70 +1,152 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { bookCar } from "./Redux/Actions";
-import { connect } from "react-redux";
+import {
+  GET_CAR_BY_ID,
+  POST_BOOKING,
+} from "../Services/apiRoutes/apiRoutes";
 
-const CarDetails = (props) => {
-  const [outOfCars, setOutOfCars]=useState(false);
-  useEffect(()=>{
-    if(props.noOfCars===0){
-    setOutOfCars(true)}
-  }
-)
+const CarDetails = () => {
   const { id } = useParams();
-  const [car, setCar] = useState([]);
+  const [car, setCar] = useState({});
+  const [showForm, setShowForm] = useState(false);
+
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [days, setDays] = useState(1);
+
   useEffect(() => {
-    axios
-      .get(`http://localhost:4000/Cars/${id}`)
-      .then((res) => setCar(res.data))
-      .catch((err) => console.log(err));
-  });
-  return (
-    <div className="container p-5 mt-5 CarDetails">
-      <div className="row my-3">
-      <div className="col-sm-12 col-lg-6 text-center">
-        <img src={car.imageUrl} alt={car.name} className="img-fluid rounded w-100 h-100"/>
-        </div>
-        <div className="col-sm-12 col-lg-6">
-          <div className="shadow my-3">
-            <h4 className="px-3 py-2 m-0">
-              <strong>{car.name}</strong>
-            </h4>
-            <div className="card-body">
-              <p className="px-3 pt-3 m-0">
-                <strong>Type:</strong> {car.type}
-              </p>
-              <p className="px-3 py-2 m-0">
-                <strong>Seating Capacity:</strong> {car.seatingCapacity}
-              </p>
-              <p className="px-3 py-2 m-0">
-                <strong>Features:</strong> {car.features}
-              </p>
-              <p className="px-3 py-2 pb-3 m-0">
-                <strong>Price Per Day:</strong> {car.pricePerDay}₹
-              </p>
-              <p className="px-3 py-2 pb-3 m-0"><b>Number of cars:</b> {props.noOfCars}</p>
-              <p className="px-3 py-2 pb-3 m-0"><b>cars:</b> {props.noOfCars > 5 ?"Available":props.noOfCars===0 ? "Out of Cars":"Limited Cars"}</p>
-            </div>
-            <div className="d-flex justify-content-center">
-            <button disabled={outOfCars} onClick={props.bookCar} className='btn btn-primary me-1 my-3 w-50' type="submit" value="Submit">Book Now <i className="bi bi-car-front-fill mx-2"></i></button>
-            </div>
-          </div>
-        </div>
+    const fetchCar = async () => {
+      try {
+        const res = await axios.get(GET_CAR_BY_ID(id));
+        setCar(res?.data || {});
+        console.log(res.data);
         
+      } catch (err) {
+        console.error(err?.message);
+      }
+    };
+
+    fetchCar();
+  }, [id]);
+
+  const bookNow = async (e) => {
+  e.preventDefault();
+
+  try {
+    const payload = {
+      fname,
+      lname,
+      email,
+      phone,
+      carId: car._id,
+      carName: car.name,             
+      days: Number(days),
+      pricePerDay: Number(car.pricePerDay),
+      totalAmount: Number(days) * Number(car.pricePerDay),
+      status: "Pending",              
+    };
+
+    console.log("Sending booking:", payload);
+
+    await axios.post(POST_BOOKING(), payload);
+
+    alert("Booking Successful!");
+
+    setShowForm(false);
+    setFname("");
+    setLname("");
+    setEmail("");
+    setPhone("");
+    setDays(1);
+
+  } catch (err) {
+    console.error(err.response?.data || err.message);
+  }
+};
+
+  return (
+    <div className="container p-5 mt-5">
+      <div className="row">
+        <div className="col-lg-6">
+          <img
+            src={car?.imageUrl}
+            alt={car?.name}
+            className="img-fluid"
+          />
+        </div>
+
+        <div className="col-lg-6">
+          <h3>{car?.name}</h3>
+          <p>Type: {car?.type}</p>
+          <p>Price: {car?.pricePerDay} ₹</p>
+
+          <button
+            onClick={() => setShowForm(true)}
+            className="btn btn-primary"
+          >
+            Book Now
+          </button>
+        </div>
       </div>
+
+      {showForm && (
+        <div className="card mt-5 p-4">
+          <h4>Enter Your Details</h4>
+
+          <form onSubmit={bookNow}>
+            <input
+              value={fname}
+              onChange={(e) => setFname(e.target.value)}
+              placeholder="First Name"
+              className="form-control mb-2"
+              required
+            />
+
+            <input
+              value={lname}
+              onChange={(e) => setLname(e.target.value)}
+              placeholder="Last Name"
+              className="form-control mb-2"
+              required
+            />
+
+            <input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              placeholder="Email"
+              className="form-control mb-2"
+              required
+            />
+
+            <input
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Phone"
+              className="form-control mb-2"
+              required
+            />
+
+            <input
+              value={days}
+              onChange={(e) => setDays(e.target.value)}
+              type="number"
+              min="1"
+              className="form-control mb-3"
+              required
+            />
+
+            <button className="btn btn-success w-100">
+              Confirm Booking
+            </button>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
-const mapStateToProps=(state)=>{
-  return{
-      noOfCars:state.noOfCars
-  }
-}
-const mapDispatchToProps=(dispatch)=>{
-  return{
-      bookCar:()=>dispatch(bookCar())
-  }
-}
-export default connect(mapStateToProps,mapDispatchToProps)(CarDetails)
 
+export default CarDetails;

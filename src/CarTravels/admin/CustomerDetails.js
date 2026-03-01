@@ -1,158 +1,213 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import Select from 'react-select/base'
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Modal } from "bootstrap"; 
+
+import {
+  GET_BOOKINGS,
+  DELETE_BOOKING,
+  UPDATE_BOOKING,
+  GET_BOOKING_BY_ID,
+} from "../../Services/apiRoutes/apiRoutes";
 
 const CustomerDetails = () => {
-    const [users,setUser]=useState([])
-    const [fname,setfName]=useState("")
-    const [lname,setlName]=useState("")
-    const [email,setEmail]=useState("")
-    const [phone,setPhone]=useState("")
-    const [service, setService] = useState("");
-    const [car, setCar] = useState("");
-    const [days, setDays] = useState(1);
-    const [id,setId]=useState("")
-    // reading data
-    useEffect(() => {
-        axios.get(`http://localhost:4000/CustomerData/`)
-        .then((res)=>setUser(res.data))
-        .catch((err)=>console.log(err))
-    } )
+  const [users, setUsers] = useState([]);
 
-    // deleting user
-    const deleteUser = (id) => {
-        axios.delete(`http://localhost:4000/CustomerData/${id}`)
-            .then(() => {alert("user deleted")
-            })
-            .catch((err) => console.log(err));
-    };
-    // Getting one record of Service
-    const getOneRecord = async (id) => {
-        try {
-            const res = await axios.get(`http://localhost:4000/CustomerData/${id}`);
-            setfName(res.data.fname);
-            setlName(res.data.lname);
-            setEmail(res.data.email);
-            setPhone(res.data.phone);
-            setService(res.data.service);
-            setCar(res.data.car);
-            setDays(res.data.days);
-            setId(res.data.id);
-    
-            // Open modal after data is set
-            const modal = new window.bootstrap.Modal(document.getElementById('updateCustomerData'));
-            modal.show();
-        } catch (err) {
-            console.log(err);
-        }
-    };
-    // Updating Service
-    const updateUserData=(e)=>{
-        e.preventDefault();
-        axios.put(`http://localhost:4000/CustomerData/${id}`,{id,fname,lname,email,phone,service,car,days})
-        .then((res)=>alert("Details Updated"))
-        .catch((err)=> console.log(err))
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [service, setService] = useState("");
+  const [carName, setCarName] = useState("");
+  const [days, setDays] = useState(1);
+  const [id, setId] = useState("");
+
+  // Fetch bookings
+  const fetchUsers = async () => {
+    try {
+      const res = await axios.get(GET_BOOKINGS());
+      setUsers(res.data || []);
+    } catch (err) {
+      console.log(err.message);
     }
-    
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  // Delete booking
+  const deleteUser = async (_id) => {
+    try {
+      await axios.delete(DELETE_BOOKING(_id));
+      alert("Booking deleted");
+      fetchUsers();
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  // Get one booking
+  const getOneRecord = async (_id) => {
+    try {
+      const res = await axios.get(GET_BOOKING_BY_ID(_id));
+
+      setFname(res.data.fname);
+      setLname(res.data.lname);
+      setEmail(res.data.email);
+      setPhone(res.data.phone);
+      setService(res.data.service || "");
+      setCarName(res.data.carName);
+      setDays(res.data.days);
+      setId(res.data._id);
+
+      const modalEl = document.getElementById("updateCustomerData");
+      const modal = new Modal(modalEl);
+      modal.show();
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // Update booking
+  const updateUserData = async (e) => {
+    e.preventDefault();
+
+    try {
+      await axios.put(UPDATE_BOOKING(id), {
+        fname,
+        lname,
+        email,
+        phone,
+        service,
+        carName,
+        days: Number(days),
+      });
+
+      alert("Booking Updated");
+      fetchUsers();
+
+      const modalEl = document.getElementById("updateCustomerData");
+      const modal = Modal.getInstance(modalEl);
+      modal.hide();
+
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
   return (
-    <div className='container p-5 view-customers-page'>
-        <h2 className='text-center mb-3'>Customer Details</h2>
-        <table className='table table-bordered table-striped'>
-            <thead>
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Service</th>
-                    <th>Car</th>
-                    <th>Days</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {users.map((user,index)=>{
-                    return(
-                        <tr key={index}>
-                            <td>{user.fname}</td>
-                            <td>{user.lname}</td>
-                            <td>{user.email}</td>
-                            <td>{user.phone}</td>
-                            <td>{user.service}</td>
-                            <td>{user.car}</td>
-                            <td>{user.days}</td>
-                            <td>
-                                <button onClick={() => getOneRecord(user.id)} data-bs-toggle="modal" data-bs-target="#updateCustomerData" className='btn btn-primary me-3 mb-2'>Edit</button>
-                                <button onClick={() => deleteUser(user.id)} className='btn btn-danger mb-2'>Delete</button>
-                            </td>
-                        </tr>
-                        
-                    )
-                })}
-            </tbody>
-        </table>
-        <div
-            className="modal fade"
-            id="updateCustomerData"
-            tabindex="-1"
-            data-bs-backdrop="static"
-            data-bs-keyboard="false"
-            
-            role="dialog"
-            aria-labelledby="modalTitleId"
-            aria-hidden="true"
-        >
-            <div
-                className="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md"
-                role="document"
-            >
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title" id="modalTitleId">
-                            Update Customer Data
-                        </h5>
-                        <button
-                            type="button"
-                            className="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                        ></button>
-                    </div>
-                    <div className="modal-body">
-                    <form onSubmit={updateUserData}>
-                        <label>First Name:</label>
-                        <input onChange={(e)=>setfName(e.target.value)} type="text" id="fname" name="fname" value={fname} placeholder="Enter your first name" className='form-control' required></input>
-                        <label>Last Name: <span className='text-danger'>*</span></label>
-                        <input onChange={(e)=>setlName(e.target.value)} type="text" id="lname" name="lname" value={lname} placeholder="Enter your last name" className='form-control' required></input>
-                        <label>Email: <span className='text-danger'>*</span></label>
-                        <input onChange={(e)=>setEmail(e.target.value)} type="email" id="email" name="email" value={email} placeholder="Enter your email" className='form-control' required></input>
-                        <label>Phone Number: <span className='text-danger'>*</span></label>
-                        <input onChange={(e)=>setPhone(e.target.value)} type="tel" id="phone" name="phone" value={phone} placeholder="Enter your phone number" className='form-control' required></input>
-                        <label>Service:</label>
-                        <input onChange={(e)=>setService(e.target.value)} type="text" id="service" name="service" value={service} placeholder="Service" className='form-control' required></input>
-                        <label>Car:</label>
-                        <input onChange={(e)=>setCar(e.target.value)} type="text" id="car" name="car" value={car} placeholder="Car" className='form-control' required></input> 
+    <div className="container p-5 view-customers-page">
+      <h2 className="text-center mb-3">Customer Bookings</h2>
 
-                        <label>Number of Days:</label>
-                        <input onChange={(e) => setDays(e.target.value)} type="number" value={days} className='form-control' min="1" required />
-                          <div className="modal-footer">
-                        <button
-                            type="button"
-                            className="btn btn-secondary"
-                            data-bs-dismiss="modal"
-                        >
-                            Close
-                        </button>
-                        <button type="submit">Submit</button>
-                        </div>
-                        </form>
-                    </div>
-                    
-                </div>
+      <table className="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Car</th>
+            <th>Days</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {users.map((user) => (
+            <tr key={user._id}>
+              <td>{user.fname} {user.lname}</td>
+              <td>{user.email}</td>
+              <td>{user.phone}</td>
+              <td>{user.carName}</td>
+              <td>{user.days}</td>
+              <td>{user.status}</td>
+              <td>
+                <button
+                  onClick={() => getOneRecord(user._id)}
+                  className="btn btn-primary me-2"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => deleteUser(user._id)}
+                  className="btn btn-danger"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Update Modal */}
+      <div
+        className="modal fade"
+        id="updateCustomerData"
+        tabIndex="-1"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Update Booking</h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
             </div>
-        </div>
-    </div>
-  )
-}
 
-export default CustomerDetails
+            <div className="modal-body">
+              <form onSubmit={updateUserData}>
+                <input
+                  value={fname}
+                  onChange={(e) => setFname(e.target.value)}
+                  className="form-control mb-2"
+                  required
+                />
+                <input
+                  value={lname}
+                  onChange={(e) => setLname(e.target.value)}
+                  className="form-control mb-2"
+                  required
+                />
+                <input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="form-control mb-2"
+                  required
+                />
+                <input
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="form-control mb-2"
+                  required
+                />
+                <input
+                  value={carName}
+                  onChange={(e) => setCarName(e.target.value)}
+                  className="form-control mb-2"
+                  required
+                />
+                <input
+                  value={days}
+                  onChange={(e) => setDays(e.target.value)}
+                  type="number"
+                  className="form-control mb-3"
+                  required
+                />
+
+                <button className="btn btn-success w-100">
+                  Update
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CustomerDetails;

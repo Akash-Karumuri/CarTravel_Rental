@@ -1,27 +1,60 @@
-import axios from 'axios'
-import React, { useState } from 'react'
+import axios from "axios";
+import React, { useState } from "react";
+import { POST_SERVICE } from "../../Services/apiRoutes/apiRoutes";
 
 const AddService = () => {
-   const [title,setTitle]=useState("")
-   const [description,setDescription]=useState("")
-   const AddNewService=(e)=>{
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  const AddNewService = async (e) => {
     e.preventDefault();
-    axios.post(`http://localhost:4000/Services` ,{title,description})
-    .then((res)=>alert("Service Added Successfully"))
-    .catch((err)=>console.log(err))
-   }
+
+    try {
+      await axios.post(POST_SERVICE(), {
+        title,
+        description,
+      });
+
+      alert("Service Added Successfully");
+
+      // reset form
+      setTitle("");
+      setDescription("");
+    } catch (err) {
+      console.error(err?.response?.data?.message || err?.message);
+    }
+  };
+
   return (
-    <div className='container col-lg-6 mx-auto shadow p-5 m-5'>
-        <h2>Add New Service</h2>
-        <form onSubmit={AddNewService}>
+    <div className="container col-lg-6 mx-auto shadow p-5 m-5">
+      <h2>Add New Service</h2>
+      <form onSubmit={AddNewService}>
         <label>Service Name:</label>
-        <input onChange={(e)=>setTitle(e.target.value)} type="text" id="titleName" name="titleName" placeholder="Enter Service name" className='from-control' required></input>
+        <input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          type="text"
+          placeholder="Enter Service name"
+          className="form-control mb-3"
+          required
+        />
+
         <label>Service Description:</label>
-        <input onChange={(e)=>setDescription(e.target.value)} type="description" id="type" name="description" placeholder="Enter Description" className='from-control' required></input>
-        <button type="submit">Submit</button>       
+        <input
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          type="text"
+          placeholder="Enter Description"
+          className="form-control mb-3"
+          required
+        />
+
+        <button type="submit" className="btn btn-primary">
+          Submit
+        </button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default AddService
+export default AddService;

@@ -18,12 +18,15 @@ app.get("/", (req, res) => {
   res.send("Car Travels API Running");
 });
 
-app.listen(process.env.PORT, () => {
-  console.log("Server running on port " + process.env.PORT);
-});
 
 
 app.use("/api/cars", carRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/auth", authRoutes);
+
+
+
+app.listen(process.env.PORT, () => {
+  console.log("Server running on port " + process.env.PORT);
+});
