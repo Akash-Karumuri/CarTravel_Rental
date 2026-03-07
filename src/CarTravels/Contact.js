@@ -13,7 +13,7 @@ const Contact = () => {
   const [phone, setPhone] = useState("");
   const [service, setService] = useState("");
   const [selectedCar, setSelectedCar] = useState("");
-  const [days, setDays] = useState(1);
+  const [days, setDays] = useState(null);
 
   const [services, setServices] = useState([]);
   const [cars, setCars] = useState([]);
@@ -161,6 +161,7 @@ const Contact = () => {
             <input
               value={days}
               onChange={(e) => setDays(e.target.value)}
+              placeholder="days"
               type="number"
               min="1"
               max="15"

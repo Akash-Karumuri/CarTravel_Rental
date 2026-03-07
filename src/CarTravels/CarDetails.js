@@ -15,7 +15,7 @@ const CarDetails = () => {
   const [lname, setLname] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [days, setDays] = useState(1);
+  const [days, setDays] = useState(null);
 
   useEffect(() => {
     const fetchCar = async () => {
@@ -134,6 +134,7 @@ const CarDetails = () => {
               value={days}
               onChange={(e) => setDays(e.target.value)}
               type="number"
+              placeholder="days"
               min="1"
               className="form-control mb-3"
               required
