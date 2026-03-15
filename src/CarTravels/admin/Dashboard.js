@@ -48,6 +48,12 @@ const Dashboard = () => {
           </div>
 
           <button
+            onClick={() => setView("")}
+            className="btn btn-outline-primary w-100 mb-2"
+          >
+            Dashboard
+          </button>
+          <button
             onClick={() => setView("AddService")}
             className="btn btn-outline-primary w-100 mb-2"
           >
