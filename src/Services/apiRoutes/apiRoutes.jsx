@@ -4,6 +4,9 @@ const BASE_URL = "https://cartravel-rental.onrender.com/api";
 // ================= AUTH =================
 export const ADMIN_LOGIN = () => `${BASE_URL}/auth/login`;
 
+// Dashboard
+export const GET_DASHBOARD_DATA = () => `${BASE_URL}dashboard/stats`;
+
 
 // ================= CARS =================
 export const GET_CARS = () => `${BASE_URL}/cars`;
