@@ -8,10 +8,10 @@ import Cars from './Cars';
 import Contact from './Contact';
 import NoPage from './NoPage';
 import Login from './admin/Login';
-import Dashboard from './admin/Dashboard';
+import Dashboard from './admin/Dashboard/Dashboard';
 import CarDetails from './CarDetails';
-import ViewService from './admin/ViewService';
-import ViewCars from './admin/ViewCars';
+import ViewService from './admin/ViewServices/ViewService';
+import ViewCars from './admin/ViewCars/ViewCars';
 import CustomerDetails from './admin/CustomerDetails';
 
 const Routing = () => {

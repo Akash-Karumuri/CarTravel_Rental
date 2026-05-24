@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import AddService from "./admin/AddService";
+import AddService from "./admin/AddService/AddService";
 import { GET_SERVICES } from "../Services/apiRoutes/apiRoutes";
 import CarLoader from "../Components/Loader/CarLoader";
 
