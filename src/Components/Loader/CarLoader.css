@@ -1,0 +1,392 @@
+.cl-scene {
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 380px;
+    position: relative;
+    overflow: hidden;
+    background: #0f172a;
+    padding: 32px 0 24px;
+}
+
+.cl-sky {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 55%;
+    background: linear-gradient(180deg, #0f172a 0%, #1e3a5f 60%, #2d5986 100%);
+}
+
+.cl-ground {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 45%;
+    background: #1a1a1a;
+}
+
+.cl-horizon {
+    position: absolute;
+    top: 55%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #374151;
+}
+
+.cl-stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 55%;
+}
+
+.cl-star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    animation: cl-twinkle 2s ease-in-out infinite;
+}
+
+@keyframes cl-twinkle {
+
+    0%,
+    100% {
+        opacity: .2
+    }
+
+    50% {
+        opacity: 1
+    }
+}
+
+.cl-city {
+    position: absolute;
+    bottom: 45%;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 2px;
+    animation: cl-city-drift 8s linear infinite;
+}
+
+.cl-building {
+    background: #1e293b;
+    border: 0.5px solid #334155;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.cl-building::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(transparent 0, transparent 7px, rgba(251, 191, 36, .12) 7px, rgba(251, 191, 36, .12) 9px);
+}
+
+@keyframes cl-city-drift {
+    from {
+        transform: translateX(0)
+    }
+
+    to {
+        transform: translateX(-60px)
+    }
+}
+
+.cl-trees {
+    position: absolute;
+    bottom: 45%;
+    left: 0;
+    right: 0;
+    height: 40px;
+    overflow: hidden;
+}
+
+.cl-tree-row {
+    display: flex;
+    animation: cl-tree-scroll 1.8s linear infinite;
+    width: 200%;
+}
+
+.cl-tree {
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.cl-tree-trunk {
+    width: 5px;
+    height: 10px;
+    background: #4b3728;
+    margin: 0 auto;
+}
+
+.cl-tree-top {
+    width: 20px;
+    height: 26px;
+    background: #166534;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    margin: 0 auto;
+}
+
+@keyframes cl-tree-scroll {
+    from {
+        transform: translateX(0)
+    }
+
+    to {
+        transform: translateX(-50%)
+    }
+}
+
+.cl-road-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 45%;
+    overflow: hidden;
+}
+
+.cl-road-surface {
+    position: absolute;
+    inset: 0;
+    background: #1c1c1c;
+}
+
+.cl-road-edge {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #d1d5db;
+}
+
+.cl-markings-wrap {
+    position: absolute;
+    top: 48%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    overflow: hidden;
+}
+
+.cl-markings {
+    display: flex;
+    white-space: nowrap;
+    animation: cl-road-scroll .45s linear infinite;
+    width: 200%;
+}
+
+.cl-dash {
+    display: inline-block;
+    width: 60px;
+    height: 4px;
+    background: #f59e0b;
+    margin-right: 40px;
+    border-radius: 2px;
+}
+
+@keyframes cl-road-scroll {
+    from {
+        transform: translateX(0)
+    }
+
+    to {
+        transform: translateX(-50%)
+    }
+}
+
+.cl-car-stage {
+    position: relative;
+    z-index: 10;
+    width: 280px;
+    height: 110px;
+}
+
+.cl-headlight-beam {
+    position: absolute;
+    left: 0;
+    top: 32px;
+    width: 80px;
+    height: 18px;
+    background: linear-gradient(90deg, rgba(255, 240, 150, .55) 0%, transparent 100%);
+    clip-path: polygon(0 20%, 100% 0%, 100% 100%, 0 80%);
+    transform: translateX(-76px);
+    animation: cl-beam .45s ease-in-out infinite alternate;
+}
+
+@keyframes cl-beam {
+    from {
+        opacity: .85
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+.cl-speedlines {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 80px;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.cl-speedline {
+    position: absolute;
+    height: 1px;
+    background: rgba(255, 255, 255, .18);
+    right: 0;
+    animation: cl-sline .35s linear infinite;
+}
+
+@keyframes cl-sline {
+    from {
+        width: 0;
+        opacity: .6
+    }
+
+    to {
+        width: 100%;
+        opacity: 0
+    }
+}
+
+.cl-car-body-wrap {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -54%);
+    animation: cl-drive .12s ease-in-out infinite alternate;
+}
+
+@keyframes cl-drive {
+    from {
+        transform: translate(-50%, -54%) rotate(-.4deg)
+    }
+
+    to {
+        transform: translate(-50%, calc(-54% - 4px)) rotate(.4deg)
+    }
+}
+
+.cl-ground-shadow {
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    height: 10px;
+    background: rgba(0, 0, 0, .5);
+    border-radius: 50%;
+    animation: cl-shadow .12s ease-in-out infinite alternate;
+}
+
+@keyframes cl-shadow {
+    from {
+        transform: translateX(-50%) scaleX(1)
+    }
+
+    to {
+        transform: translateX(-50%) scaleX(.93)
+    }
+}
+
+@keyframes cl-wspin {
+    from {
+        transform: rotate(0deg)
+    }
+
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+.cl-exhaust {
+    position: absolute;
+    right: -14px;
+    top: 42px;
+}
+
+.cl-smoke {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(156, 163, 175, .55);
+    animation: cl-smoke-drift 1s ease-out infinite;
+}
+
+@keyframes cl-smoke-drift {
+    0% {
+        transform: translateX(0) translateY(0) scale(.4);
+        opacity: .7
+    }
+
+    100% {
+        transform: translateX(40px) translateY(-14px) scale(1.8);
+        opacity: 0
+    }
+}
+
+.cl-info-row {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.cl-dot-row {
+    display: flex;
+    gap: 7px;
+}
+
+.cl-ld {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #6b7280;
+    animation: cl-ld-pop 1.2s ease-in-out infinite;
+}
+
+.cl-ld:nth-child(2) {
+    animation-delay: .2s
+}
+
+.cl-ld:nth-child(3) {
+    animation-delay: .4s
+}
+
+@keyframes cl-ld-pop {
+
+    0%,
+    80%,
+    100% {
+        transform: scale(.6);
+        background: #374151
+    }
+
+    40% {
+        transform: scale(1);
+        background: #3b82f6
+    }
+}
+
+.cl-fetch-label {
+    font-size: 13px;
+    color: #94a3b8;
+    letter-spacing: .04em;
+}
